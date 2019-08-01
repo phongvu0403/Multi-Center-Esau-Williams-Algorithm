@@ -9,12 +9,12 @@ public class Graph {
 
     private int weight;
 
-    HashMap<Integer, Vertex> vertex;                         // Map names to vertices
+    HashMap<Integer, Vertex> vertex;                        // Map names to vertices
     HashSet<Edge> edges;                                    // Collection of all edges
     HashMap<Vertex, HashSet<Edge>> adjList;                 // Adjacency List of Graph
-    HashSet<Edge> cmst;
-    HashSet<Vertex> visited;
-    int cmstWeight;
+    HashSet<Edge> cmst;                                     // The CMST edges
+    HashSet<Vertex> visited;                                // keep track of visited nodes
+    int cmstWeight;                                         // cmst value
 
     public Graph(){
         this.adjList = new HashMap<Vertex, HashSet<Edge>>();
@@ -25,12 +25,20 @@ public class Graph {
         this.cmstWeight = 0;
     }
 
+    /**
+     * This method is used to accept user Weight constraint.
+     * */
     public int getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight) {
-        this.weight = weight;
+    /**
+     * This method is used as a getter function for Weight constraint.
+     * */
+    public void setWeight() {
+        System.out.println("Enter the value of W, maximum weight the subtree can have.");
+        Scanner sc = new Scanner(System.in);
+        this.weight = sc.nextInt();
     }
 
     /**
@@ -72,6 +80,10 @@ public class Graph {
         }
     }
 
+    /**
+     * This method is used to set the direct distance from the hub to each vertex. It also add these edges to initial
+     * CMST.
+     * */
     public void setDistanceFromHub(){
         for(Edge e : this.edges){
             if(e.from.equals(this.vertex.get(0))){
@@ -89,6 +101,9 @@ public class Graph {
     }
 
 
+    /**
+     * This method is used to set the edges for each vertex in the increasing order of the cost of the edges.
+     * */
     public void setIncreasingDistanceForEachNode(){
         for(Vertex v : this.adjList.keySet()){
             HashSet<Edge> vset = new HashSet<Edge>(this.adjList.get(v));

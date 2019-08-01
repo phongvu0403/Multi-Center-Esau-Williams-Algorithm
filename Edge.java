@@ -3,7 +3,7 @@ package EsauWilliams;
 public class Edge {
     Vertex from;        // from vertex in the directed edge
     Vertex to;          // to vertex in the directed edge
-    int cost;       // cost of the edge
+    int cost;           // cost of the edge
 
     public Edge(Vertex from, Vertex to, int cost){
         this.from = from;

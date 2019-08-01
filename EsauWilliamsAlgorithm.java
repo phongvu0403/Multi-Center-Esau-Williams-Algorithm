@@ -14,6 +14,9 @@ public class EsauWilliamsAlgorithm {
         this.terminate = false;
     }
 
+    /**
+     * This method is used to obtain the CMST for the given graph.
+     */
     public void esauWilliamsAlgorithm(){
         this.graph.setIncreasingDistanceForEachNode();
         this.graph.setDistanceFromHub();
@@ -43,6 +46,12 @@ public class EsauWilliamsAlgorithm {
         System.out.println("the Tree has following edges"+graph.cmst);
     }
 
+    /**
+     * This method is used to find the index of minimum element in an array.
+     *
+     * @param arr array whose minimum element is to be found
+     * @return return the index of the minimum element in the array
+     */
     private int minVal(int[] arr){
         int ind = 1;
         int min = arr[ind];
@@ -55,6 +64,9 @@ public class EsauWilliamsAlgorithm {
         return ind;
     }
 
+    /**
+     * This method is used to determine when the Esau-Williams algorithm terminates.
+     */
     private void checkForTermination(int[] tradeOff){
         boolean positive = true;
         for(int i=0;i<tradeOff.length;i++){
@@ -67,6 +79,11 @@ public class EsauWilliamsAlgorithm {
         }
     }
 
+    /**
+     * This method is used to calculate the tradeoffs for each vertex along with its associated smallest cost edge.
+     *
+     * @return  the suitable edge that needs to be added to cmst based on the tradeoff/savings value.
+     */
     private Edge getMinTradeOff() {
         int[] tradeOffs = new int[this.graph.vertex.size()];
         Edge[] edges = new Edge[this.graph.vertex.size()];
@@ -90,6 +107,12 @@ public class EsauWilliamsAlgorithm {
         return edges[smallest];
     }
 
+    /**
+     * This method is used to remove an initial edge from the hub to node so that it can be replaced with
+     * the new selected edge.
+     *
+     * @param v the vertex which was selected to be replaced.
+     */
     private void removeFromCMST(Vertex v){
         Iterator<Edge> itr = this.graph.cmst.iterator();
         while(itr.hasNext()){
@@ -106,6 +129,12 @@ public class EsauWilliamsAlgorithm {
         }
     }
 
+    /**
+     * This method is used to find the parent of the subtree the vertex belongs in the graph.
+     *
+     * @param v the vertex whose parent is needs to be found in the subtree of v
+     * @return the parent of vertex in its subtree
+     */
     private Vertex findParent(Vertex v){
         while(v.parent != null){
             v = v.parent;
@@ -113,6 +142,11 @@ public class EsauWilliamsAlgorithm {
         return v;
     }
 
+    /**
+     * This method is used to update the components of the subtree with latest subtree details.
+     *
+     * @param parent the vertex which has updated subtree details and is used to update its other nodes in sub tree.
+     */
     private void updateSubTree(Vertex parent){
         for(Vertex v : parent.subTreeGroup){
             if(!parent.equals(v)){
@@ -122,6 +156,12 @@ public class EsauWilliamsAlgorithm {
         }
     }
 
+    /**
+     * This method is used to perform union of 2 vertices, based on the constraints set for the network.
+     *
+     * @param e the edge which needs to be added to the subtree and perform union of vertices.
+     * @return  boolean value as to whether the union was successful or not based on the constraints.
+     */
     private boolean union(Edge e){
         Vertex u = this.findParent(e.from);
         Vertex v = this.findParent(e.to);
@@ -148,6 +188,12 @@ public class EsauWilliamsAlgorithm {
         }
     }
 
+    /**
+     * This method is used to remove the edge from priority queue of all vertices as it was selected/rejected and
+     * available in the future.
+     *
+     * @param e the edge which needs to be removed from priority queue of all vertices.
+     */
     private void updateVertexPQ(Edge e) {
         for(int i: this.graph.vertex.keySet()){
             Vertex v = this.graph.vertex.get(i);

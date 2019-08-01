@@ -6,7 +6,7 @@ public class Main {
         Graph graph = new Graph();
         graph.getVertices();
         graph.getEdges();
-        graph.setWeight(3);
+        graph.setWeight();
         EsauWilliamsAlgorithm ewa = new EsauWilliamsAlgorithm(graph);
         ewa.esauWilliamsAlgorithm();
     }
