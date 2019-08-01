@@ -1,4 +1,4 @@
-package EsauWilliams;
+package EsauWilliamsAlgorithm;
 
 
 public class Main {
