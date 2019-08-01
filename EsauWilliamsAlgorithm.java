@@ -22,6 +22,9 @@ public class EsauWilliamsAlgorithm {
         this.graph.setDistanceFromHub();
         while(!this.terminate){
             Edge e = getMinTradeOff();
+            if(e == null){
+                break;
+            }
             System.out.println("Min trade off edge is "+e);
             Vertex p1 = this.findParent(e.from);
             Vertex p2 = this.findParent(e.to);
@@ -77,6 +80,11 @@ public class EsauWilliamsAlgorithm {
         if(positive){
             this.terminate = true;
         }
+        if(!positive){
+            for(int i: this.graph.vertex.keySet()){
+
+            }
+        }
     }
 
     /**
@@ -91,7 +99,11 @@ public class EsauWilliamsAlgorithm {
             if(v.equals(this.graph.vertex.get(0))){
                 continue;
             }
+            System.out.println(v.pq);
             int ind = v.name;
+            if(v.pq.peek() == null){
+                return null;
+            }
             edges[ind] = v.pq.peek();
             int costSmallEdge = edges[ind].cost;
             Vertex parent = this.findParent(v);
@@ -268,5 +280,39 @@ public class EsauWilliamsAlgorithm {
 4 6 9
 5 6 8
 
+
+5
+0 0
+1 1
+2 1
+3 1
+4 1
+
+10
+0 1 14
+0 2 1
+0 3 42
+0 4 34
+1 2 19
+1 3 24
+1 4 38
+2 3 44
+2 4 4
+3 4 7
+
+
+4
+0 0
+1 1
+2 1
+3 1
+
+6
+0 1 10
+0 2 15
+0 3 20
+1 2 35
+1 3 25
+2 3 30
 
  */
