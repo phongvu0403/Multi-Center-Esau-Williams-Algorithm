@@ -3,14 +3,18 @@ package EsauWilliamsAlgorithm;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.PriorityQueue;
+import java.util.HashMap;
 
 public class Vertex {
     int name;
     int weight;
+    int x_axis;
+    int y_axis;
     Vertex parent;
     HashSet<Vertex> subTreeGroup;
     PriorityQueue<Edge> pq;
-    int distanceFromHub;
+    //int distanceFromHub;
+    HashMap<Vertex, Double> distanceFromHub;
 
     public Vertex(int name, int weight){
         this.name = name;
@@ -20,11 +24,12 @@ public class Vertex {
         this.pq = new PriorityQueue<Edge>(new Comparator<Edge>() {
             @Override
             public int compare(Edge o1, Edge o2) {
-                return Integer.compare(o1.cost,o2.cost);
+                return Double.compare(o1.cost,o2.cost);
             }
         });
         this.weight = weight;
-        this.distanceFromHub = Integer.MAX_VALUE;
+        //this.distanceFromHub = Integer.MAX_VALUE;
+        this.distanceFromHub = new HashMap<Vertex, Double>();
     }
 
     /**

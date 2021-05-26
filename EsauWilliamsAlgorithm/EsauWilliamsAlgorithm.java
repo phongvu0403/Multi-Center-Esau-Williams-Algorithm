@@ -1,5 +1,7 @@
 package EsauWilliamsAlgorithm;
 
+import org.apache.commons.math3.analysis.function.Min;
+
 import java.util.*;
 
 public class EsauWilliamsAlgorithm {
@@ -57,7 +59,7 @@ public class EsauWilliamsAlgorithm {
      */
     private int minVal(int[] arr){
         int ind = 1;
-        int min = arr[ind];
+        double min = arr[ind];
         for(int i=2;i<arr.length;i++){
             if(min > arr[i]){
                 min = arr[i];
@@ -105,10 +107,12 @@ public class EsauWilliamsAlgorithm {
                 return null;
             }
             edges[ind] = v.pq.peek();
-            int costSmallEdge = edges[ind].cost;
+            double costSmallEdge = edges[ind].cost;
             Vertex parent = this.findParent(v);
-            int costDistToHub = parent.distanceFromHub;
-            tradeOffs[ind] = costSmallEdge - costDistToHub;
+            double costDistToHub = this.graph.getminDistance(parent);
+            tradeOffs[ind] = (int) (costSmallEdge - costDistToHub);
+            System.out.println("costSmallEdge" + costSmallEdge);
+            System.out.println("costDistToHub" + costDistToHub);
             System.out.println("smallest edge for "+v+" is "+edges[ind]+" with weight "+tradeOffs[ind]);
         }
         int smallest = this.minVal(tradeOffs);
@@ -135,7 +139,16 @@ public class EsauWilliamsAlgorithm {
             }else if(e.to.equals(v) && e.from.equals(this.graph.vertex.get(0))){
                 itr.remove();
                 this.graph.cmstWeight -= e.cost;
-            }else{
+            }
+            else if(e.from.equals(v) && e.to.equals(this.graph.vertex.get(4))){
+                itr.remove();
+                this.graph.cmstWeight -= e.cost;
+            }
+            else if(e.to.equals(v) && e.from.equals(this.graph.vertex.get(4))){
+                itr.remove();
+                this.graph.cmstWeight -= e.cost;
+            }
+            else{
 
             }
         }
@@ -178,14 +191,14 @@ public class EsauWilliamsAlgorithm {
         Vertex u = this.findParent(e.from);
         Vertex v = this.findParent(e.to);
         System.out.println(e.from.weight+" "+e.to.weight);
-        if(((e.from.name == 0 || e.to.name == 0) || ((e.from.weight < graph.getWeight())&& (e.from.weight + e.to.weight <= this.graph.getWeight()) && (e.to.weight < graph.getWeight())))){
+        if(((e.from.name == 0 || e.to.name == 0) || (e.from.name == 4 || e.to.name == 4) || ((e.from.weight < graph.getWeight())&& (e.from.weight + e.to.weight <= this.graph.getWeight()) && (e.to.weight < graph.getWeight())))){
             if(u.name < v.name){
                 e.to.parent = e.from;
             }else{
                 e.from.parent = e.to;
             }
             System.out.println("Adding edge "+e);
-            if((e.from.name != 0 && e.to.name != 0)){
+            if((e.from.name != 0 && e.to.name != 0 && e.from.name != 4 && e.to.name != 4)){
                 e.from.subTreeGroup.addAll(e.to.subTreeGroup);
                 e.from.weight += e.to.weight;
                 updateSubTree(e.from);

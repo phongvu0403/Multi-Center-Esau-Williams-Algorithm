@@ -3,9 +3,9 @@ package EsauWilliamsAlgorithm;
 public class Edge {
     Vertex from;        // from vertex in the directed edge
     Vertex to;          // to vertex in the directed edge
-    int cost;           // cost of the edge
+    double cost;           // cost of the edge
 
-    public Edge(Vertex from, Vertex to, int cost){
+    public Edge(Vertex from, Vertex to, double cost){
         this.from = from;
         this.to = to;
         this.cost = cost;
