@@ -1,6 +1,7 @@
-package EsauWilliamsAlgorithm;
+package MultiCenterEsauWilliamsAlgorithm;
 
 
+import java.awt.print.PrinterGraphics;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -64,7 +65,7 @@ public class Graph {
 //        System.out.println("Enter the value of W, maximum weight the subtree can have.");
 //        Scanner sc = new Scanner(System.in);
 //        this.weight = sc.nextInt();
-        this.weight = 3;
+        this.weight = 15;
     }
 
     /**
@@ -84,7 +85,7 @@ public class Graph {
 //            this.adjList.put(inpV, new HashSet<Edge>());
 //        }
 //        System.out.println(this.vertex);
-        FileInputStream file = new FileInputStream("vertex_data_test.xls");
+        FileInputStream file = new FileInputStream("vertiex_data.xls");
         HSSFWorkbook wb = new HSSFWorkbook(file);
         HSSFSheet sheet = wb.getSheetAt(0);
         FormulaEvaluator formula = wb.getCreationHelper().createFormulaEvaluator();
@@ -102,6 +103,8 @@ public class Graph {
                 this.adjList.put(inpV, new HashSet<Edge>());
             }
             }
+        wb.close();
+        file.close();
         System.out.println(this.vertex);
     }
 
@@ -155,18 +158,24 @@ public class Graph {
      * */
     public void setDistanceFromHub(){
         Set<Integer> keySet = this.vertex.keySet();
-//        Vertex Hub1 = new Vertex(0,1);
-//        Vertex Hub2 = new Vertex(4, 3);
-        Vertex Hub1 = this.vertex.get(0);
-        Vertex Hub2 = this.vertex.get(4);
+        Vertex Hub1 = this.vertex.get(5);
+        Vertex Hub2 = this.vertex.get(12);
+        Vertex Hub3 = this.vertex.get(41);
+        Vertex Hub4 = this.vertex.get(65);
 
         for (Integer key: keySet){
             double DistanceFromHub1 = 0.3 * Math.sqrt(Math.pow((this.vertex.get(key).x_axis - Hub1.x_axis), 2) +
                     Math.pow((this.vertex.get(key).y_axis - Hub1.y_axis), 2));
             double DistanceFromHub2 = 0.3 * Math.sqrt(Math.pow((this.vertex.get(key).x_axis - Hub2.x_axis), 2) +
                     Math.pow((this.vertex.get(key).y_axis - Hub2.y_axis), 2));
+            double DistanceFromHub3 = 0.3 * Math.sqrt(Math.pow((this.vertex.get(key).x_axis - Hub3.x_axis), 2) +
+                    Math.pow((this.vertex.get(key).y_axis - Hub3.y_axis), 2));
+            double DistanceFromHub4 = 0.3 * Math.sqrt(Math.pow((this.vertex.get(key).x_axis - Hub4.x_axis), 2) +
+                    Math.pow((this.vertex.get(key).y_axis - Hub4.y_axis), 2));
             this.vertex.get(key).distanceFromHub.put(Hub1, DistanceFromHub1);
             this.vertex.get(key).distanceFromHub.put(Hub2, DistanceFromHub2);
+            this.vertex.get(key).distanceFromHub.put(Hub3, DistanceFromHub3);
+            this.vertex.get(key).distanceFromHub.put(Hub4, DistanceFromHub4);
 //            System.out.println(this.vertex.get(key).distanceFromHub);
 //            System.out.println(this.vertex.get(key).distanceFromHub.get(Hub1));
         }
@@ -188,8 +197,25 @@ public class Graph {
                 e.cost = e.from.distanceFromHub.get(Hub2);
                 this.cmstWeight+= e.cost;
                 this.cmst.add(e);
+            }else if((e.from.equals(Hub3)) & (e.to.distanceFromHub.get(Hub3) == getminDistance(e.to))){
+                this.cmst.add(e);
+                this.cmstWeight+= e.cost;
+                System.out.println(e.to.distanceFromHub);
+                e.cost = e.to.distanceFromHub.get(Hub1);
+            }else if((e.to.equals(Hub3)) & (e.from.distanceFromHub.get(Hub3) == getminDistance(e.from))){
+                e.cost = e.from.distanceFromHub.get(Hub1);
+                this.cmstWeight+= e.cost;
+                this.cmst.add(e);
+            }else if ((e.from.equals(Hub4)) & (e.to.distanceFromHub.get(Hub4) == getminDistance(e.to))){
+                this.cmst.add(e);
+                this.cmstWeight+= e.cost;
+                e.cost = e.to.distanceFromHub.get(Hub2);
+            }else if((e.to.equals(Hub4)) & (e.from.distanceFromHub.get(Hub4) == getminDistance(e.from))) {
+                e.cost = e.from.distanceFromHub.get(Hub2);
+                this.cmstWeight += e.cost;
+                this.cmst.add(e);
             }else {
-
+                continue;
             }
         }
     }
@@ -202,10 +228,13 @@ public class Graph {
         for(Vertex v : this.adjList.keySet()){
             HashSet<Edge> vset = new HashSet<Edge>(this.adjList.get(v));
             for(Edge e: vset){
-                if(e.from.equals(this.vertex.get(0)) || e.to.equals(this.vertex.get(0))){
+                if(e.from.equals(this.vertex.get(5)) || e.to.equals(this.vertex.get(5))
+                    || e.from.equals(this.vertex.get(12)) || e.to.equals(this.vertex.get(12))
+                    || e.from.equals(this.vertex.get(41)) || e.to.equals(this.vertex.get(41))
+                    || e.from.equals(this.vertex.get(65)) || e.to.equals(this.vertex.get(65))){
                     continue;
                 }
-                v.pq.offer(e);
+                else v.pq.offer(e);
             }
         }
     }
@@ -221,78 +250,18 @@ public class Graph {
     }
 
     public double getminDistance(Vertex vertex){
-        double d1 = vertex.distanceFromHub.get(this.vertex.get(0));
-        double d2 = vertex.distanceFromHub.get(this.vertex.get(4));
+        double d1 = vertex.distanceFromHub.get(this.vertex.get(5));
         double minDistance = d1;
         Set<Integer> keySet = new HashSet<Integer>();
-        keySet.add(0);
-        keySet.add(4);
+        keySet.add(5);
+        keySet.add(12);
+        keySet.add(41);
+        keySet.add(65);
         for (Integer key: keySet){
             if (minDistance > vertex.distanceFromHub.get(this.vertex.get(key))) minDistance = vertex.distanceFromHub.get(this.vertex.get(key));
         }
         return minDistance;
     }
+
 }
 
-/*
-
-6
-0
-1
-2
-3
-4
-5
-
-15
-0 2 6
-0 1 5
-0 4 12
-0 5 15
-0 3 9
-2 1 4
-2 5 12
-2 4 5
-1 5 10
-1 4 8
-1 3 3
-5 4 7
-5 3 6
-4 3 6
-2 3 8
-
-
-7
-0
-1
-2
-3
-4
-5
-6
-
-
-21
-0 1 5
-0 2 6
-0 3 9
-0 4 10
-0 5 11
-0 6 15
-1 2 9
-1 3 6
-1 4 6
-1 5 8
-1 6 17
-2 3 7
-2 4 9
-2 5 8
-2 6 12
-3 4 10
-3 5 5
-3 6 11
-4 5 14
-4 6 9
-5 6 8
-
-* */

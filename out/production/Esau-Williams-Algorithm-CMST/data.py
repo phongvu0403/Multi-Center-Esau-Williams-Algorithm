@@ -13,7 +13,7 @@ sheet1.write(0, 3, 'Weight')
 for i in range(100):
     sheet1.write(i + 1, 0, i)
     sheet1.write(i + 1, 1, random.randint(1, 1000))
-    sheet1.write(i + 1, 2, random.randint(1, 1000))
+    sheet1.write(i + 1, 2, random.randint(20, 730))
     if ((i == 1) or (i == 8) or (i == 9)):
         sheet1.write(i + 1, 3, 2)
     elif ((i == 23) or (i == 72) or (i == 29) or (i == 67) or (i == 55)):

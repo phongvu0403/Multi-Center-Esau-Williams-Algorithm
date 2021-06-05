@@ -1,4 +1,4 @@
-package EsauWilliamsAlgorithm;
+package MultiCenterEsauWilliamsAlgorithm;
 
 import java.util.Comparator;
 import java.util.HashSet;

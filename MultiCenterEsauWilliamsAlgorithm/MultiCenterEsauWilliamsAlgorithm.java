@@ -1,16 +1,16 @@
-package EsauWilliamsAlgorithm;
+package MultiCenterEsauWilliamsAlgorithm;
 
 import org.apache.commons.math3.analysis.function.Min;
 
 import java.util.*;
 
-public class EsauWilliamsAlgorithm {
+public class MultiCenterEsauWilliamsAlgorithm {
 
     Graph graph;
     Vertex minVertex;
     boolean terminate;
 
-    public EsauWilliamsAlgorithm(Graph graph){
+    public MultiCenterEsauWilliamsAlgorithm(Graph graph){
         this.graph = graph;
         this.minVertex = null;
         this.terminate = false;
@@ -19,7 +19,7 @@ public class EsauWilliamsAlgorithm {
     /**
      * This method is used to obtain the CMST for the given graph.
      */
-    public void esauWilliamsAlgorithm(){
+    public void MultiCenterEsauWilliamsAlgorithm(){
         this.graph.setIncreasingDistanceForEachNode();
         this.graph.setDistanceFromHub();
         while(!this.terminate){
@@ -43,12 +43,22 @@ public class EsauWilliamsAlgorithm {
             System.out.println(this.graph.cmst);
             System.out.println();
             System.out.println();
+            Set<Integer> keySet = this.graph.vertex.keySet();
+            for (Integer key: keySet){
+                System.out.println("Size of Subtree Node "+ key +" is: " + this.graph.vertex.get(key).subTreeGroup.size());}
         }
         if(this.graph.cmst.size() != this.graph.vertex.size() - 1){
+            System.out.println("Size of CMST" + this.graph.cmst.size());
+            System.out.println("Size of Vertex" + this.graph.vertex.size());
             System.out.println("The graph is disconnected");
         }
         System.out.println("The minimum cost is "+this.graph.cmstWeight);
         System.out.println("the Tree has following edges"+graph.cmst);
+
+//        Set<Integer> keySet = this.graph.vertex.keySet();
+//        for (Integer key: keySet){
+//            System.out.println("Size of Subtree Node "+ key +"is:" + this.graph.vertex.get(key).subTreeGroup.size());
+//        }
     }
 
     /**
@@ -98,7 +108,8 @@ public class EsauWilliamsAlgorithm {
         int[] tradeOffs = new int[this.graph.vertex.size()];
         Edge[] edges = new Edge[this.graph.vertex.size()];
         for(Vertex v : this.graph.adjList.keySet()){
-            if(v.equals(this.graph.vertex.get(0))){
+            if(v.equals(this.graph.vertex.get(5)) || v.equals(this.graph.vertex.get(12))
+                || v.equals(this.graph.vertex.get(41)) || v.equals(this.graph.vertex.get(65))){
                 continue;
             }
             System.out.println(v.pq);
@@ -133,22 +144,38 @@ public class EsauWilliamsAlgorithm {
         Iterator<Edge> itr = this.graph.cmst.iterator();
         while(itr.hasNext()){
             Edge e = itr.next();
-            if(e.from.equals(v) && e.to.equals(this.graph.vertex.get(0))){
+            if(e.from.equals(v) && e.to.equals(this.graph.vertex.get(5))){
                 itr.remove();
                 this.graph.cmstWeight -= e.cost;
-            }else if(e.to.equals(v) && e.from.equals(this.graph.vertex.get(0))){
-                itr.remove();
-                this.graph.cmstWeight -= e.cost;
-            }
-            else if(e.from.equals(v) && e.to.equals(this.graph.vertex.get(4))){
+            }else if(e.to.equals(v) && e.from.equals(this.graph.vertex.get(5))){
                 itr.remove();
                 this.graph.cmstWeight -= e.cost;
             }
-            else if(e.to.equals(v) && e.from.equals(this.graph.vertex.get(4))){
+            else if(e.from.equals(v) && e.to.equals(this.graph.vertex.get(12))){
                 itr.remove();
                 this.graph.cmstWeight -= e.cost;
             }
-            else{
+            else if(e.to.equals(v) && e.from.equals(this.graph.vertex.get(12))){
+                itr.remove();
+                this.graph.cmstWeight -= e.cost;
+            }else if(e.from.equals(v) && e.to.equals(this.graph.vertex.get(41))){
+                itr.remove();
+                this.graph.cmstWeight -= e.cost;
+            }else if(e.to.equals(v) && e.from.equals(this.graph.vertex.get(41))){
+                itr.remove();
+                this.graph.cmstWeight -= e.cost;
+            }
+            else if(e.from.equals(v) && e.to.equals(this.graph.vertex.get(65))){
+                itr.remove();
+                this.graph.cmstWeight -= e.cost;
+            }
+            else if(e.to.equals(v) && e.from.equals(this.graph.vertex.get(65))){
+                itr.remove();
+                this.graph.cmstWeight -= e.cost;
+            }else if((e.from.equals(v) && (!e.from.equals(e.to.parent))) ||
+                    ((e.to.equals(v) && (!e.to.equals(e.from .parent))))){
+                itr.remove();
+                this.graph.cmstWeight -= e.cost;
 
             }
         }
@@ -160,7 +187,7 @@ public class EsauWilliamsAlgorithm {
      * @param v the vertex whose parent is needs to be found in the subtree of v
      * @return the parent of vertex in its subtree
      */
-    private Vertex findParent(Vertex v){
+    public Vertex findParent(Vertex v){
         while(v.parent != null){
             v = v.parent;
         }
@@ -188,20 +215,26 @@ public class EsauWilliamsAlgorithm {
      * @return  boolean value as to whether the union was successful or not based on the constraints.
      */
     private boolean union(Edge e){
-        Vertex u = this.findParent(e.from);
-        Vertex v = this.findParent(e.to);
         System.out.println(e.from.weight+" "+e.to.weight);
-        if(((e.from.name == 0 || e.to.name == 0) || (e.from.name == 4 || e.to.name == 4) || ((e.from.weight < graph.getWeight())&& (e.from.weight + e.to.weight <= this.graph.getWeight()) && (e.to.weight < graph.getWeight())))){
-            if(u.name < v.name){
-                e.to.parent = e.from;
-            }else{
-                e.from.parent = e.to;
-            }
+
+//        if(((e.from.name == 5 || e.to.name == 5) || (e.from.name == 12 || e.to.name == 12) ||
+//                (e.from.name == 41 || e.to.name == 41) || (e.from.name == 65 || e.to.name == 65) || ((e.from.weight < graph.getWeight())
+//                && (e.from.weight + e.to.weight <= this.graph.getWeight()) && (e.to.weight < graph.getWeight())))){
+
+        if(((e.from.name == 5 || e.to.name == 5) || (e.from.name == 12 || e.to.name == 12) ||
+                (e.from.name == 41 || e.to.name == 41) || (e.from.name == 65 || e.to.name == 65) ||
+                ((e.from.weight < graph.getWeight()) && (e.from.weight + e.to.weight <= this.graph.getWeight()) &&
+                        (e.to.weight < graph.getWeight()) && (e.from.subTreeGroup.size() < 2) && (e.to.subTreeGroup.size() < 2)))){
+
+            if (this.graph.getminDistance(e.from) > this.graph.getminDistance(e.to)) e.from.parent = e.to;
+            else e.to.parent = e.from;
             System.out.println("Adding edge "+e);
-            if((e.from.name != 0 && e.to.name != 0 && e.from.name != 4 && e.to.name != 4)){
+            if(e.from.name != 5 && e.to.name != 5 && e.from.name != 12 && e.to.name != 12
+            && e.from.name != 41 && e.to.name != 41 && e.from.name != 65 && e.to.name != 65 ){
                 e.from.subTreeGroup.addAll(e.to.subTreeGroup);
                 e.from.weight += e.to.weight;
                 updateSubTree(e.from);
+                System.out.println("size of subtree" + e.from.subTreeGroup.size());
             }
             updateVertexPQ(e);
             removeFromCMST(this.minVertex);
@@ -229,103 +262,3 @@ public class EsauWilliamsAlgorithm {
     }
 }
 
-
-/*
-
-6
-0 0
-1 1
-2 1
-3 1
-4 1
-5 1
-
-15
-0 2 6
-0 1 5
-0 4 12
-0 5 15
-0 3 9
-2 1 4
-2 5 12
-2 4 5
-1 5 10
-1 4 8
-1 3 3
-5 4 7
-5 3 6
-4 3 6
-2 3 8
-
-
-
-
-7
-0 0
-1 1
-2 1
-3 2
-4 1
-5 1
-6 1
-
-
-21
-0 1 5
-0 2 6
-0 3 9
-0 4 10
-0 5 11
-0 6 15
-1 2 9
-1 3 6
-1 4 6
-1 5 8
-1 6 17
-2 3 7
-2 4 9
-2 5 8
-2 6 12
-3 4 10
-3 5 5
-3 6 11
-4 5 14
-4 6 9
-5 6 8
-
-
-5
-0 0
-1 1
-2 1
-3 1
-4 1
-
-10
-0 1 14
-0 2 1
-0 3 42
-0 4 34
-1 2 19
-1 3 24
-1 4 38
-2 3 44
-2 4 4
-3 4 7
-
-
-4
-0 0
-1 1
-2 1
-3 1
-
-6
-0 1 10
-0 2 15
-0 3 20
-1 2 35
-1 3 25
-2 3 30
-
- */

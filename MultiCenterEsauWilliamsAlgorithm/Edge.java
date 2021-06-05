@@ -1,4 +1,4 @@
-package EsauWilliamsAlgorithm;
+package MultiCenterEsauWilliamsAlgorithm;
 
 public class Edge {
     Vertex from;        // from vertex in the directed edge
